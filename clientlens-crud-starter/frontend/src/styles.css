@@ -1,0 +1,7 @@
+:root { --brand: #2563eb; }
+body { margin: 0; font-family: Inter, Roboto, 'Helvetica Neue', Arial, sans-serif; background: #f6f8fc; }
+.container { padding: 1rem; max-width: 1200px; margin: 0 auto; }
+.card { background: white; border-radius: 1rem; padding: 1rem; box-shadow: 0 10px 30px rgba(0,0,0,0.06); }
+.header { display: flex; align-items: center; gap: .75rem; }
+.header h1 { margin: 0; font-size: 1.4rem; }
+.toolbar { display:flex; gap:.5rem; justify-content:flex-end; margin:.5rem 0 1rem; }
