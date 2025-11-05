@@ -1,0 +1,340 @@
+Below is the detailed Confluence-ready documentation for your ClientLens pipelines.
+
+Copy-paste directly into Confluence.
+
+
+---
+
+ClientLens — Comprehensive Web Intelligence & Monitoring Platform
+
+1. Introduction
+
+ClientLens is an automated monitoring and intelligence platform designed to continuously extract, analyze, and notify stakeholders about relevant updates from financial and corporate websites.
+
+It includes:
+
+Daily automated web content monitoring
+
+Daily automated file/PDF monitoring & extraction
+
+Website health monitoring
+
+Feedback collection and continuous improvement loop
+
+Configuration dashboard with role-based access
+
+
+
+---
+
+2. System Objectives
+
+Objective	Description
+
+Timely insights	Ensure stakeholders are instantly aware of business-critical updates
+Automation	Minimize manual website checks
+ML + LLM Insights	Smart content change detection, PDF extraction, relevance scoring
+Reliability	Continuous health monitoring of client websites
+Self-Service UI	User-controlled inputs & configurations, role-based access
+
+
+
+---
+
+3. High-Level Architecture
+
+flowchart LR
+A[Dashboard UI] -->|manage config| B[SQL Server DB]
+B -->|fetch URLs, configs| C[Airflow Pipelines]
+C --> D[Playwright / Crawl4AI Scrapers]
+D --> E[File Parser / LLM Engine]
+E --> F[Notifications Engine Email]
+F -->|feedback| G[Feedback API]
+C --> H[Health Check Engine]
+H --> B
+
+
+---
+
+4. Pipelines Overview
+
+Pipeline	Purpose	Frequency	Tech
+
+Web Content Monitoring	Detect and notify content changes	Daily	Playwright, Crawl4AI, LLM
+File Monitoring	Detect & extract content from new PDFs/docs	Daily	Playwright, PDF parser, LLM
+Website URL Health Check	Validate websites & capture screenshots	Daily	Python, Playwright
+Feedback API	Collect stakeholder sentiment on notifications	On-demand / scheduled	FastAPI
+Dashboard UI	Inputs, administration & logs	Continuous	Angular 19, FastAPI
+
+
+
+---
+
+5. Detailed Pipeline Flows
+
+
+---
+
+5.1 Web Content Monitoring
+
+Purpose
+
+Automatically track and compare content updates on client-specific websites.
+
+Key monitored categories
+
+Press releases & news bulletins
+
+Board changes / corporate governance
+
+Tenders & RFPs
+
+Market / asset class updates
+
+Investor announcements & circulars
+
+
+Workflow
+
+flowchart TD
+A[Fetch URLs + config from DB] --> B[Load website via Playwright]
+B --> C[Extract content via XPath / Crawl4AI]
+C --> D[Convert extracted HTML to Markdown]
+D --> E[Compare with previous version using LLM diff]
+E --> F{Changes detected?}
+F -->|Yes| G[Generate summary + formatted diff]
+G --> H[Send email alert to stakeholders]
+F -->|No| I[Log: No change]
+H --> J[Store run logs + snapshots]
+
+Outputs
+
+Email with new content summary
+
+Markdown content snapshots
+
+DB logs for audit
+
+
+
+---
+
+5.2 File Monitoring Pipeline
+
+Purpose
+
+Identify, download, extract, and notify on PDFs/documents from client sites.
+
+Extraction Logic
+
+Detect new files using link pattern + DOM traversal
+
+Download PDFs
+
+Parse text & metadata
+
+AI extraction for insights
+
+Hash-based de-duplication
+
+
+Workflow
+
+flowchart TD
+A[Scan configured URLs] --> B[Identify PDF/document links]
+B --> C[Check hash for duplicates]
+C -->|New| D[Download PDF]
+D --> E[Parse metadata + text]
+E --> F[Keyword + LLM analysis]
+F --> G[Generate summarized insights]
+G --> H[Notify stakeholder with PDF details + summary]
+H --> I[Store logs + extracted data]
+
+Outputs
+
+PDF downloaded & stored
+
+Summary + insights emailed
+
+Metadata stored in DB
+
+
+
+---
+
+5.3 Website Health Check Pipeline
+
+Purpose
+
+Ensure monitored sites are live and accessible.
+
+Actions
+
+Ping URL
+
+Full browser load check
+
+Screenshot capture
+
+HTTP status classification
+
+Notification to engineering team daily
+
+
+Workflow
+
+flowchart TD
+A[Fetch all active URLs] --> B[HTTP GET + Browser load]
+B --> C[Record status code + latency]
+C --> D[Capture screenshot]
+D --> E[Store results + logs in DB]
+E --> F[Email health summary to engineers]
+
+
+---
+
+5.4 Feedback API Pipeline
+
+Purpose
+
+Capture real user feedback for continuous platform improvement.
+
+Feedback Types
+
+👍 Relevant and useful
+
+👎 Not useful
+
+Comment feedback
+
+
+Workflow
+
+flowchart TD
+A[Read stakeholder response email/API input] --> B[Parse signal 👍/👎 + comments]
+B --> C[Map to notification ID]
+C --> D[Store in database]
+D --> E[Dashboard displays feedback]
+
+
+---
+
+5.5 Dashboard UI (Angular 19 + FastAPI)
+
+Purpose
+
+Central admin console for controlling pipeline behavior, monitoring outputs, user management.
+
+Key Features
+
+Feature	Description
+
+Client & URL config	Manage websites and scraping settings
+Bulk actions	Activate/deactivate URLs, skip notifications/downloads
+Health check view	See last run status + screenshot proofs
+Notification audit	Track emails sent per client
+User Roles	SuperAdmin / Admin / ReadOnly
+
+
+Role Matrix
+
+Permission	SuperAdmin	Admin	ReadOnly
+
+Manage clients & URLs	✅	✅	❌
+Bulk toggles	✅	✅	❌
+View logs	✅	✅	✅
+Create/edit users	✅	❌	❌
+
+
+
+---
+
+6. Technology Stack
+
+Layer	Tools
+
+Scraping	Playwright, Crawl4AI
+Backend	FastAPI
+Frontend	Angular 19, PrimeNG
+LLM	Azure OpenAI GPT-4.1 / GPT-5
+DB	SQL Server
+Scheduler	Apache Airflow
+Deploy	Docker + NGINX
+
+
+
+---
+
+7. Logging & Storage
+
+Item	Location
+
+HTML snapshots	<path>/html/
+Markdown snapshots	<path>/md/
+PDFs	/downloads/
+Screenshots	/screenshots/
+System logs	/logs/
+
+
+
+---
+
+8. Future Enhancements
+
+Relevance scoring AI model
+
+Dashboard-based PDF viewer & text explorer
+
+Auto-retry + proxy rotation engine
+
+Multi-language PDF extraction
+
+Business tagging engine (NLP)
+
+
+
+---
+
+9. Document Control
+
+Field	Value
+
+Owner	Data Engineering Team
+Last Updated	{{date}}
+Version	1.0
+
+
+
+---
+
+✅ Delivered
+
+Your detailed Confluence page version is ready above.
+
+
+---
+
+Would you like me to generate next?
+
+Reply with:
+
+1. PDF version
+
+
+2. HTML export
+
+
+3. Editable Confluence page with macros & tables
+
+
+4. Word version with diagrams embedded
+
+
+5. Architecture draw.io file
+
+
+6. All of the above
+
+
+
+Tell me the option number(s).
